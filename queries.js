@@ -1,28 +1,27 @@
-const { Client } = require("pg");
+const { Pool } = require("pg");
 require("dotenv").config();
 const { USER, HOST, DATABASE, PASSWORD, PORT } = process.env;
-let client;
+let pool;
 if (process.env.NODE_ENV !== "production") {
-  client = new Client({
+  pool = new Pool({
     user: USER,
     host: HOST,
     database: DATABASE,
     password: PASSWORD,
     port: PORT,
   });
-  client.connect(function (err) {
+  pool.connect(function (err) {
     if (err) {
       throw err;
     }
     console.log("Connected!");
   });
 } else {
-  client = new Client({
+  pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: true,
-    // ssl: {
-    //   rejectUnauthorized: false,
-    // },
+    ssl: {
+      rejectUnauthorized: false,
+    },
   });
 }
 
@@ -32,7 +31,7 @@ function createSession(request, response) {
   const username = request.body.username;
   const password = request.body.password;
 
-  client.query(
+  pool.query(
     "SELECT * FROM users WHERE username = $1 AND password = $2",
     [username, password],
     (error, results) => {
@@ -53,7 +52,7 @@ function createSession(request, response) {
 
 function createUser(request, response) {
   const { username, password } = request.body;
-  client.query(
+  pool.query(
     "INSERT INTO users (username, password) values ($1, $2) RETURNING username",
     [username, password],
     (error, results) => {
@@ -69,7 +68,7 @@ function createUser(request, response) {
 
 function getTodos(request, response) {
   const id = parseInt(request.params.userId);
-  client.query(
+  pool.query(
     `SELECT * FROM todos WHERE user_id = ${id} AND is_completed = false ORDER BY id ASC`,
     (error, results) => {
       if (error) {
@@ -90,7 +89,7 @@ function getTodos(request, response) {
 function createTodo(request, response) {
   const { title, description, user_id, start_date, end_date, category } =
     request.body;
-  client.query(
+  pool.query(
     "INSERT INTO todos (title, description, user_id, start_date, end_date, category) values ($1, $2, $3, $4, $5, $6) RETURNING id, title, description, user_id, start_date, end_date, category",
     [title, description, user_id, start_date, end_date, category],
     (error, results) => {
@@ -108,7 +107,7 @@ function createTodo(request, response) {
 
 function getTodo(request, response) {
   const id = parseInt(request.params.id);
-  client.query(`SELECT * FROM todos WHERE id = ${id}`, (error, results) => {
+  pool.query(`SELECT * FROM todos WHERE id = ${id}`, (error, results) => {
     if (error) {
       throw error;
     }
@@ -120,7 +119,7 @@ function getTodo(request, response) {
 function editTodo(request, response) {
   const id = parseInt(request.params.id);
   const { title, description, start_date, end_date, category } = request.body;
-  client.query(
+  pool.query(
     "UPDATE todos SET title = $1, description = $2, category = $3, start_date = $4, end_date = $5 WHERE id = $6",
     [title, description, category, start_date, end_date, id],
     (error, results) => {
@@ -129,7 +128,7 @@ function editTodo(request, response) {
       }
     }
   );
-  client.query(`SELECT * FROM todos WHERE id = ${id}`, (error, results) => {
+  pool.query(`SELECT * FROM todos WHERE id = ${id}`, (error, results) => {
     if (error) {
       throw error;
     }
@@ -143,7 +142,7 @@ function editTodo(request, response) {
 
 function editCompleteTodo(request, response) {
   const id = parseInt(request.params.id);
-  client.query(
+  pool.query(
     `UPDATE todos SET is_completed = NOT is_completed WHERE id = $1 returning is_completed`,
     [id],
     (error, results) => {
@@ -161,7 +160,7 @@ function editCompleteTodo(request, response) {
 
 function deleteTodo(request, response) {
   const id = parseInt(request.params.id);
-  client.query("DELETE FROM todos WHERE id = $1", [id], (error, results) => {
+  pool.query("DELETE FROM todos WHERE id = $1", [id], (error, results) => {
     if (error) {
       throw error;
     }
