@@ -23,6 +23,7 @@ if (process.env.NODE_ENV !== "production") {
       rejectUnauthorized: false,
     },
   });
+  pool.connect();
 }
 
 var jwt = require("jsonwebtoken");
