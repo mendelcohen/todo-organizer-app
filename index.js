@@ -11,10 +11,10 @@ app.use(express.json());
 
 const path = require("path");
 
-app.use(express.static("public"));
-
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/index.html"), (err) => {
+// app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./build/index.html"), (err) => {
     if (err) {
       res.status(500).send(err);
     }
