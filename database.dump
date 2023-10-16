@@ -1,0 +1,197 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.12
+-- Dumped by pg_dump version 14.5 (Homebrew)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: todos; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.todos (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    description text,
+    user_id integer NOT NULL,
+    start_date date,
+    start_time time without time zone,
+    end_date date,
+    end_time time without time zone,
+    category character varying(255) NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    is_completed boolean DEFAULT false
+);
+
+
+--
+-- Name: todos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.todos_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: todos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.todos_id_seq OWNED BY public.todos.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(50) NOT NULL,
+    password character varying(255) NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: todos id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.todos ALTER COLUMN id SET DEFAULT nextval('public.todos_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: todos; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.todos (id, title, description, user_id, start_date, start_time, end_date, end_time, category, created_at, updated_at, is_completed) FROM stdin;
+30	Test	Scroll	6	2023-10-03	\N	2023-10-03	\N	Essentials	2023-10-02 22:22:05.761583	2023-10-02 22:22:05.761583	t
+16	Add completed feature in todo organizer	Add a radio button for each todo that can be checked when the todo is completed. Once it is checked the todo becomes disabled. After refreshing it is moved to the old todos section.	6	2023-09-13	\N	2023-09-13	\N	Essentials	2023-09-12 22:12:18.718199	2023-09-12 22:12:18.718199	t
+22	Learn Tanya	For today's chitas	6	2023-09-13	\N	2023-09-13	\N	Essentials	2023-09-12 23:12:20.179525	2023-09-12 23:12:20.179525	t
+19	Go to sleep NOW!	Tonight before 12:30am. Sleep is very important which is why this todo had been placed in the essentials section. If you do not sleep enough it will have negative effects on your health.	6	2023-09-14	\N	2023-09-14	\N	Essentials	2023-09-12 22:57:42.226148	2023-09-12 22:57:42.226148	f
+33	Deploy the app	Read tutorial	6	2023-10-05	\N	2023-10-05	\N	Essentials	2023-10-05 15:28:06.886054	2023-10-05 15:28:06.886054	f
+31	Finish project very soon	App	6	2023-10-03	\N	2023-10-03	\N	Essentials	2023-10-02 23:25:51.939727	2023-10-02 23:25:51.939727	f
+34	Push node project to Github Tonight	The old project has been divided into two directories. One for the frontend and the other for the backend. 	6	2023-10-15	\N	2023-10-15	\N	Urgent	2023-10-15 02:22:08.580204	2023-10-15 02:22:08.580204	f
+35	Fix deploy issues NOW	CSS on landing page	27	2023-10-16	\N	2023-10-16	\N	Urgent	2023-10-16 09:17:02.525496	2023-10-16 09:17:02.525496	f
+20	Learn a maamer	Prepare for Rosh hashanah this year	6	2023-09-13	\N	2023-09-18	\N	Essentials	2023-09-12 22:59:46.237051	2023-09-12 22:59:46.237051	t
+17	Fix bug view todo	After creating a new todo and clicking view we aren't sending the todo id in the api call.	6	2023-09-13	\N	2023-09-13	\N	Essentials	2023-09-12 22:18:07.888116	2023-09-12 22:18:07.888116	t
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users (id, username, password, created_at, updated_at) FROM stdin;
+1	mendy	cohen	2023-07-30 16:20:28.708797	2023-07-30 16:20:28.708797
+2	cohen	mendy	2023-07-30 16:27:58.478794	2023-07-30 16:27:58.478794
+5	mm	okay	2023-07-30 17:32:32.469374	2023-07-30 17:32:32.469374
+6	Good	Night	2023-08-04 01:39:23.518538	2023-08-04 01:39:23.518538
+11	stand	up	2023-09-18 17:46:28.654202	2023-09-18 17:46:28.654202
+12	sit	down	2023-09-18 17:55:09.822746	2023-09-18 17:55:09.822746
+15	try 	axios	2023-10-09 17:14:52.496165	2023-10-09 17:14:52.496165
+16	isru	chag	2023-10-09 17:16:22.641076	2023-10-09 17:16:22.641076
+17	test	account	2023-10-09 17:18:36.845758	2023-10-09 17:18:36.845758
+18	alert	login	2023-10-09 17:34:16.44118	2023-10-09 17:34:16.44118
+19	test	alert	2023-10-09 17:36:57.714762	2023-10-09 17:36:57.714762
+20	try 	again	2023-10-09 17:39:50.533611	2023-10-09 17:39:50.533611
+21	m	c	2023-10-09 17:42:35.254681	2023-10-09 17:42:35.254681
+22	MM	C	2023-10-09 17:46:23.556478	2023-10-09 17:46:23.556478
+23	M	C	2023-10-09 17:47:16.754616	2023-10-09 17:47:16.754616
+24	Got	it	2023-10-09 17:47:55.024701	2023-10-09 17:47:55.024701
+25	Got	it	2023-10-09 17:52:07.686612	2023-10-09 17:52:07.686612
+26	why	not	2023-10-09 17:54:43.14551	2023-10-09 17:54:43.14551
+27	Mendy	Cohen	2023-10-16 09:15:55.268819	2023-10-16 09:15:55.268819
+28	Good	Night84	2023-10-16 10:40:26.13402	2023-10-16 10:40:26.13402
+\.
+
+
+--
+-- Name: todos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.todos_id_seq', 37, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 28, true);
+
+
+--
+-- Name: todos todos_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.todos
+    ADD CONSTRAINT todos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: todos todos_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.todos
+    ADD CONSTRAINT todos_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
