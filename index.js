@@ -8,6 +8,26 @@ app.use(
   })
 );
 app.use(express.json());
+
+const path = require("path");
+
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
+app.use(express.static("public"));
+
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/index.html"), (err) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+});
+
 const auth = require("./auth");
 
 const queries = require("./queries");
