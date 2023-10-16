@@ -17,10 +17,10 @@ if (process.env.NODE_ENV !== "production") {
     console.log("Connected!");
   });
 } else {
+  console.log(process.env.DATABASE_URL);
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-      required: true,
       rejectUnauthorized: false,
     },
   });
