@@ -1,27 +1,27 @@
 const { Client } = require("pg");
 let client;
-if (process.env.NODE_ENV !== "production") {
-  client = new Client({
-    user: "menachemcohen",
-    host: "localhost",
-    database: "todo_organizer",
-    password: "password",
-    port: 5432,
-  });
-  client.connect(function (err) {
-    if (err) {
-      throw err;
-    }
-    console.log("Connected!");
-  });
-} else {
-  client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  });
-}
+// if (process.env.NODE_ENV !== "production") {
+client = new Client({
+  user: "menachemcohen",
+  host: "localhost",
+  database: "todo_organizer",
+  password: "password",
+  port: 5432,
+});
+client.connect(function (err) {
+  if (err) {
+    throw err;
+  }
+  console.log("Connected!");
+});
+// } else {
+//   client = new Client({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//       rejectUnauthorized: false,
+//     },
+//   });
+// }
 
 var jwt = require("jsonwebtoken");
 
