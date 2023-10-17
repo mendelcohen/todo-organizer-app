@@ -69,7 +69,9 @@ function createUser(request, response) {
 }
 
 function getTodos(request, response) {
-  const id = parseInt(request.params.userId);
+  // const id = parseInt(request.params.userId);
+  console.log(request.body);
+  const id = parseInt(request.body.id);
   pool.query(
     `SELECT * FROM todos WHERE user_id = ${id} AND is_completed = false ORDER BY id ASC`,
     (error, results) => {
@@ -108,7 +110,7 @@ function createTodo(request, response) {
 }
 
 function getTodo(request, response) {
-  const id = parseInt(request.params.id);
+  const id = parseInt(request.body.id);
   pool.query(`SELECT * FROM todos WHERE id = ${id}`, (error, results) => {
     if (error) {
       throw error;
@@ -119,31 +121,32 @@ function getTodo(request, response) {
 }
 
 function editTodo(request, response) {
-  const id = parseInt(request.params.id);
-  const { title, description, start_date, end_date, category } = request.body;
+  const { title, description, category, start_date, end_date, id } =
+    request.body;
   pool.query(
-    "UPDATE todos SET title = $1, description = $2, category = $3, start_date = $4, end_date = $5 WHERE id = $6",
+    "UPDATE todos SET title = $1, description = $2, category = $3, start_date = $4, end_date = $5 WHERE id = $6 RETURNING title, description, category, start_date, end_date, id, user_id",
     [title, description, category, start_date, end_date, id],
     (error, results) => {
       if (error) {
         throw error;
       }
+      return response.status(200).json({
+        message: `Your todo ${title} has been updated`,
+        todo: {
+          title,
+          description,
+          category,
+          start_date,
+          end_date,
+          id,
+        },
+      });
     }
   );
-  pool.query(`SELECT * FROM todos WHERE id = ${id}`, (error, results) => {
-    if (error) {
-      throw error;
-    }
-    const [todo] = results.rows;
-    return response.status(200).json({
-      message: `Your todo ${title} has been updated`,
-      todo: todo,
-    });
-  });
 }
 
 function editCompleteTodo(request, response) {
-  const id = parseInt(request.params.id);
+  const id = parseInt(request.body.id);
   pool.query(
     `UPDATE todos SET is_completed = NOT is_completed WHERE id = $1 returning is_completed`,
     [id],
@@ -161,7 +164,8 @@ function editCompleteTodo(request, response) {
 }
 
 function deleteTodo(request, response) {
-  const id = parseInt(request.params.id);
+  console.log(request.body);
+  const id = parseInt(request.body.id);
   pool.query("DELETE FROM todos WHERE id = $1", [id], (error, results) => {
     if (error) {
       throw error;

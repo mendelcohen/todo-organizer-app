@@ -20,14 +20,9 @@ const path = require("path");
 app.use(express.static(path.resolve(__dirname, "./public")));
 
 // Handle GET requests to /api route
-app.get("/index", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
-
-// All other GET requests not handled before will return our React app
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./public", "index.html"));
-});
+// app.get("/index", (req, res) => {
+//   res.json({ message: "Hello from server!" });
+// });
 
 const auth = require("./auth");
 
@@ -50,19 +45,25 @@ app.get("/test", auth, (req, res) => {
 
 app.post("/session/create", createSession);
 
-app.get("/todos/all/:userId", getTodos);
+// app.get("/todos/all/:userId", getTodos);
+app.post("/todos", getTodos);
 
 app.post("/user/create", createUser);
 
 app.post("/todo/create", createTodo);
 
-app.get("/todo/:id", getTodo);
+app.post("/todo", getTodo);
 
-app.put("/todo/edit/:id", editTodo);
+app.put("/todo/edit", editTodo);
 
-app.put("/todo/edit-complete/:id", editCompleteTodo);
+app.put("/todo/edit-complete", editCompleteTodo);
 
-app.delete("/todo/delete/:id", deleteTodo);
+app.delete("/todo/delete", deleteTodo);
+
+// All other GET requests not handled before will return our React app
+app.get("/*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./public", "index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
