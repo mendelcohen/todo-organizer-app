@@ -44,9 +44,9 @@ function createSession(request, response) {
       if (results.rows.length) {
         const user = results.rows[0];
         var token = jwt.sign({ user_id: user.id }, "secret");
-        response.status(200).json({ user: user.id, token });
+        return response.status(200).json({ user: user.id, token });
       } else {
-        response.status(401).json("Unauthorized");
+        return response.status(401).json("Unauthorized");
       }
     }
   );
@@ -54,18 +54,31 @@ function createSession(request, response) {
 
 function createUser(request, response) {
   const { username, password } = request.body;
-  pool.query(
-    "INSERT INTO users (username, password) values ($1, $2) RETURNING username",
-    [username, password],
-    (error, results) => {
-      if (error) {
-        throw error;
-      }
-      response
-        .status(201)
-        .send({ message: `Welcome ${results.rows[0].username}` });
+  pool.query("SELECT password FROM users", (error, results) => {
+    if (error) {
+      throw error;
     }
-  );
+    const passwords = results.rows.map((row) => row.password);
+    for (let i = 0; i < passwords.length; i++) {
+      if (passwords[i] === password) {
+        return response
+          .status(422)
+          .send({ message: `Password "${password}" unavailable` });
+      }
+    }
+    pool.query(
+      "INSERT INTO users (username, password) values ($1, $2) RETURNING username",
+      [username, password],
+      (error, results) => {
+        if (error) {
+          throw error;
+        }
+        return response
+          .status(201)
+          .send({ message: `Welcome ${results.rows[0].username}` });
+      }
+    );
+  });
 }
 
 function getTodos(request, response) {
@@ -85,7 +98,7 @@ function getTodos(request, response) {
           ? groupedTodos[todos[i].category].push(todos[i])
           : (groupedTodos[todos[i].category] = [todos[i]]);
       }
-      response.status(200).json(groupedTodos);
+      return response.status(200).json(groupedTodos);
     }
   );
 }
@@ -116,7 +129,7 @@ function getTodo(request, response) {
       throw error;
     }
     const [todo] = results.rows;
-    response.status(200).json(todo);
+    return response.status(200).json(todo);
   });
 }
 
