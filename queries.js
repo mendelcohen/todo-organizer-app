@@ -82,8 +82,6 @@ function createUser(request, response) {
 }
 
 function getTodos(request, response) {
-  // const id = parseInt(request.params.userId);
-  console.log(request.body);
   const id = parseInt(request.body.id);
   pool.query(
     `SELECT * FROM todos WHERE user_id = ${id} AND is_completed = false ORDER BY id ASC`,
