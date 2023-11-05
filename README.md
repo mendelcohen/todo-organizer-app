@@ -22,9 +22,14 @@ Table: todos, Fields: title, description, user_id, start_date, start_time, end_d
 4. Make sure port 3001 is available or change the port in index.js line 2 to whichever port you would like to use. Then, in the terminal:
 
 ```
+cd todo-organizer-app
 npm run server
 ```
 
+5. If you are running the app directly from this repo use localhost:3001 (or the port you added in index.js line 2) in your browser. If you running the app from the client side repo (https://github.com/mendelcohen/todo-organizer-react-app) use the port in the client side.
+
 ## Roadmap
 
-- Install a JavaScript calendar library in the view todo page for users to see their scheduled todos in a calendar format.
+- Consider using an SQL solution for handling the duplicate password error response, such as adding a unique key constraint to the password field.
+
+- Add deployment instructions in the README.
