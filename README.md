@@ -1,6 +1,6 @@
 # Todo Organizer App
 
-This todo app is more than just a means to post all your todos and check them off. Todo Organizer App provides four categories to characterize your todos based on the four quadrants of time management.
+More than just a means to post all your todos and check them off, Todo Organizer App provides four categories to characterize your todos based on the four quadrants of time management.
 
 ## Run Locally
 
