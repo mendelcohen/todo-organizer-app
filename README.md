@@ -30,6 +30,10 @@ npm run server
 
 ## Roadmap
 
+- Implement basic Auth for login.
+
+- Fix and implement the jwt verification for authentication.
+
 - Consider using an SQL solution for handling the duplicate password error response, such as adding a unique key constraint to the password field.
 
 - Add deployment instructions in the README.
