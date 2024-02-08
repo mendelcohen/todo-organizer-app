@@ -30,6 +30,8 @@ npm run server
 
 ## Roadmap
 
+Backend
+
 - Implement basic Auth for login.
 
 - Fix and implement the jwt verification for authentication.

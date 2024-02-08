@@ -175,7 +175,6 @@ function editCompleteTodo(request, response) {
 }
 
 function deleteTodo(request, response) {
-  console.log(request.body);
   const id = parseInt(request.body.id);
   pool.query("DELETE FROM todos WHERE id = $1", [id], (error, results) => {
     if (error) {
