@@ -17,9 +17,9 @@ if (process.env.NODE_ENV !== "production") {
     console.log("Connected!");
   });
 } else {
-  console.log(process.env.DATABASE_URL);
+  console.log(process.env.POSTGRESQL_EXTERNAL_URL);
   pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.POSTGRESQL_EXTERNAL_URL,
     ssl: {
       rejectUnauthorized: false,
     },
